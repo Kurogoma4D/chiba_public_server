@@ -8,6 +8,7 @@ from .serializers import FacilitySerializer, CategorySerializer
 class FacilityViewSet(viewsets.ModelViewSet):
     queryset = Facility.objects.all()
     serializer_class = FacilitySerializer
+    filter_fields = ('category',)
 
 
 class CategoryViewSet(viewsets.ModelViewSet):
