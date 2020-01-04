@@ -1,6 +1,7 @@
-from django.urls import path
-from chiba_public import views
+from rest_framework import routers
+from .views import FacilityViewSet, CategoryViewSet
 
-urlpatterns = [
-    path("", views.home, name="home"),
-]
+
+router = routers.DefaultRouter()
+router.register(r'facilities', FacilityViewSet)
+router.register(r'categories', CategoryViewSet)
