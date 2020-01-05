@@ -28,6 +28,28 @@ class Command(BaseCommand):
             categories.append(category)
         Category.objects.bulk_create(categories)
 
+    def generate_reversed_category_dict(self):
+        categories = Category.objects.all().values_list('id', 'name')
+        categories = list(categories)
+        categories = map(lambda x: tuple(reversed(x)), categories)
+        categories = dict(list(categories))
+        return categories
+
+    def apply_facility(self, read_data):
+        categories = self.generate_reversed_category_dict()
+
+        facilities = []
+        for data in read_data.itertuples():
+            if pd.isnull(data.name) or pd.isnull(data.latitude) or pd.isnull(data.longitude):
+                continue
+            category_id = categories[data.category]
+            category = Category(id=category_id, name=data.category)
+            facility = Facility(
+                name=data.name, category=category, name_kana=data.name_kana, address=data.address, latitude=data.latitude, longitude=data.longitude
+            )
+            facilities.append(facility)
+        Facility.objects.bulk_create(facilities)
+
     def handle(self, *args, **options):
         try:
             file_name = options['file_name'][0]
@@ -44,3 +66,8 @@ class Command(BaseCommand):
         category_names = set(read_data['category'])
 
         self.apply_category(category_names=category_names)
+
+        Facility.objects.all().delete()
+        self.apply_facility(read_data=read_data)
+
+        print('operation succeeded.')
