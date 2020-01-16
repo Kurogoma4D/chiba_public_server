@@ -1,5 +1,6 @@
 import django_filters
 from rest_framework import viewsets, filters
+from .custom_viewsets import AddHeaderViewSet
 
 from .models import Facility, Category
 from .serializers import FacilitySerializer, CategorySerializer
@@ -7,7 +8,7 @@ from .serializers import FacilitySerializer, CategorySerializer
 SEARCH_RANGE = 1.0
 
 
-class FacilityViewSet(viewsets.ModelViewSet):
+class FacilityViewSet(AddHeaderViewSet):
     queryset = Facility.objects.none()
     serializer_class = FacilitySerializer
     filter_fields = ('category',)
@@ -32,6 +33,6 @@ class FacilityViewSet(viewsets.ModelViewSet):
         return _queryset
 
 
-class CategoryViewSet(viewsets.ModelViewSet):
+class CategoryViewSet(AddHeaderViewSet):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
