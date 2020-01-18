@@ -11,8 +11,6 @@ class CategorySerializer(serializers.ModelSerializer):
 
 
 class FacilitySerializer(WritableNestedModelSerializer):
-    category = CategorySerializer()
-
     class Meta:
         model = Facility
         fields = ('id', 'name', 'category', 'address', 'latitude', 'longitude')
